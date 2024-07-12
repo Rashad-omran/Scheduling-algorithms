@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const InputForm = ({ processes, setProcesses, setQuantum }) => {
   const [quantum, updateQuantum] = useState(1);
@@ -74,6 +75,19 @@ const InputForm = ({ processes, setProcesses, setQuantum }) => {
       </div>
     </div>
   );
+};
+
+InputForm.propTypes = {
+  processes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      arrivalTime: PropTypes.number.isRequired,
+      burstTime: PropTypes.number.isRequired,
+      priority: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  setProcesses: PropTypes.func.isRequired,
+  setQuantum: PropTypes.func.isRequired,
 };
 
 export default InputForm;

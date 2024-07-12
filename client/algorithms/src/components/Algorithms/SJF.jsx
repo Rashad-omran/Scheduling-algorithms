@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
+import PropTypes from 'prop-types';
 import Results from '../Results';
 
-const  SJF =  ({ processes }) => {
+const SJF = ({ processes }) => {
   const [preemptive, setPreemptive] = useState(false);
 
   const calculateNonPreemptiveSJF = (processes) => {
@@ -13,10 +14,10 @@ const  SJF =  ({ processes }) => {
     let isCompleted = Array(n).fill(false);
     let order = [];
 
-    for (let i = 0; i < n; i++) {
-      waitingTimes[processes[i].id] = 0;
-      turnAroundTimes[processes[i].id] = 0;
-    }
+    processes.forEach((process) => {
+      waitingTimes[process.id] = 0;
+      turnAroundTimes[process.id] = 0;
+    });
 
     while (completed !== n) {
       let idx = -1;
@@ -70,10 +71,9 @@ const  SJF =  ({ processes }) => {
     let waitingTimes = {};
     let turnAroundTimes = {};
     let remainingTimes = {};
-    let isCompleted = Array(n).fill(false);
     let order = [];
 
-    processes.forEach(process => {
+    processes.forEach((process) => {
       remainingTimes[process.id] = process.burstTime;
       waitingTimes[process.id] = 0;
       turnAroundTimes[process.id] = 0;
@@ -81,7 +81,7 @@ const  SJF =  ({ processes }) => {
 
     while (completed !== n) {
       for (let i = 0; i < n; i++) {
-        if ((processes[i].arrivalTime <= currentTime) && (remainingTimes[processes[i].id] < minBurstTime) && remainingTimes[processes[i].id] > 0) {
+        if (processes[i].arrivalTime <= currentTime && remainingTimes[processes[i].id] < minBurstTime && remainingTimes[processes[i].id] > 0) {
           minBurstTime = remainingTimes[processes[i].id];
           shortest = i;
           check = true;
@@ -96,10 +96,7 @@ const  SJF =  ({ processes }) => {
       remainingTimes[processes[shortest].id]--;
       order.push(processes[shortest].id);
 
-      minBurstTime = remainingTimes[processes[shortest].id];
-      if (minBurstTime === 0) {
-        minBurstTime = Number.MAX_VALUE;
-      }
+      minBurstTime = remainingTimes[processes[shortest].id] === 0 ? Number.MAX_VALUE : remainingTimes[processes[shortest].id];
 
       if (remainingTimes[processes[shortest].id] === 0) {
         completed++;
@@ -161,6 +158,16 @@ const  SJF =  ({ processes }) => {
       </div>
     </div>
   );
+};
+
+SJF.propTypes = {
+  processes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      arrivalTime: PropTypes.number.isRequired,
+      burstTime: PropTypes.number.isRequired,
+    })
+  ).isRequired,
 };
 
 export default SJF;

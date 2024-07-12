@@ -1,4 +1,5 @@
-import React from 'react';
+// import React from 'react';
+import PropTypes from 'prop-types';
 import Results from '../Results';
 
 const RoundRobin = ({ processes, quantum }) => {
@@ -11,7 +12,7 @@ const RoundRobin = ({ processes, quantum }) => {
     let remainingTimes = {};
     let order = [];
 
-    processes.forEach(process => {
+    processes.forEach((process) => {
       remainingTimes[process.id] = process.burstTime;
       waitingTimes[process.id] = 0;
       turnAroundTimes[process.id] = 0;
@@ -62,6 +63,17 @@ const RoundRobin = ({ processes, quantum }) => {
   result.order = compressOrder(result.order);
 
   return <Results result={result} algorithm="Round Robin" />;
+};
+
+RoundRobin.propTypes = {
+  processes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      arrivalTime: PropTypes.number.isRequired,
+      burstTime: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  quantum: PropTypes.number.isRequired,
 };
 
 export default RoundRobin;

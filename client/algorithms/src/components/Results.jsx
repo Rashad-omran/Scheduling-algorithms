@@ -1,4 +1,5 @@
-import React from 'react';
+// import React from 'react';
+import PropTypes from 'prop-types';
 
 const Results = ({ result, algorithm }) => {
   if (!result || !result.order) {
@@ -6,7 +7,7 @@ const Results = ({ result, algorithm }) => {
   }
 
   return (
-    <div className=''>
+    <div>
       <h2 className="text-xl font-semibold mb-2">نتائج الخوارزمية: {algorithm}</h2>
       <div>
         <strong>ترتيب العمليات:</strong>
@@ -34,6 +35,17 @@ const Results = ({ result, algorithm }) => {
       </div>
     </div>
   );
+};
+
+Results.propTypes = {
+  result: PropTypes.shape({
+    order: PropTypes.arrayOf(PropTypes.string).isRequired,
+    waitingTimes: PropTypes.objectOf(PropTypes.number).isRequired,
+    turnAroundTimes: PropTypes.objectOf(PropTypes.number).isRequired,
+    averageWaitingTime: PropTypes.number.isRequired,
+    averageTurnAroundTime: PropTypes.number.isRequired,
+  }),
+  algorithm: PropTypes.string.isRequired,
 };
 
 export default Results;

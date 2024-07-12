@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import Results from '../Results';
 
 const Priority = ({ processes }) => {
@@ -13,10 +14,10 @@ const Priority = ({ processes }) => {
     let isCompleted = Array(n).fill(false);
     let order = [];
 
-    for (let i = 0; i < n; i++) {
-      waitingTimes[processes[i].id] = 0;
-      turnAroundTimes[processes[i].id] = 0;
-    }
+    processes.forEach((process) => {
+      waitingTimes[process.id] = 0;
+      turnAroundTimes[process.id] = 0;
+    });
 
     while (completed !== n) {
       let idx = -1;
@@ -70,10 +71,9 @@ const Priority = ({ processes }) => {
     let waitingTimes = {};
     let turnAroundTimes = {};
     let remainingTimes = {};
-    let isCompleted = Array(n).fill(false);
     let order = [];
 
-    processes.forEach(process => {
+    processes.forEach((process) => {
       remainingTimes[process.id] = process.burstTime;
       waitingTimes[process.id] = 0;
       turnAroundTimes[process.id] = 0;
@@ -81,7 +81,7 @@ const Priority = ({ processes }) => {
 
     while (completed !== n) {
       for (let i = 0; i < n; i++) {
-        if ((processes[i].arrivalTime <= currentTime) && (processes[i].priority < minPriority) && remainingTimes[processes[i].id] > 0) {
+        if (processes[i].arrivalTime <= currentTime && processes[i].priority < minPriority && remainingTimes[processes[i].id] > 0) {
           minPriority = processes[i].priority;
           shortest = i;
           check = true;
@@ -141,7 +141,7 @@ const Priority = ({ processes }) => {
 
   return (
     <div>
-        <Results result={result} algorithm={`Priority Scheduling (${preemptive ? 'Preemptive' : 'Non-Preemptive'})`} />
+      <Results result={result} algorithm={`Priority Scheduling (${preemptive ? 'Preemptive' : 'Non-Preemptive'})`} />
       <div className="mt-4">
         <button
           className={`px-4 py-2 rounded mr-2 ${preemptive ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
@@ -158,6 +158,17 @@ const Priority = ({ processes }) => {
       </div>
     </div>
   );
+};
+
+Priority.propTypes = {
+  processes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      arrivalTime: PropTypes.number.isRequired,
+      burstTime: PropTypes.number.isRequired,
+      priority: PropTypes.number.isRequired,
+    })
+  ).isRequired,
 };
 
 export default Priority;
